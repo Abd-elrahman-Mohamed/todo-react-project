@@ -1,10 +1,36 @@
 .App {
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #181a1c;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.icon-btn {
+  transition: all 0.2s !important;
+  -webkit-transition: all 0.2s !important;
+  -moz-transition: all 0.2s !important;
+  -ms-transition: all 0.2s !important;
+  -o-transition: all 0.2s !important;
+}
+
+.icon-btn:hover {
+  background-color: #c5c5c5 !important;
+  box-shadow: 0px 7px 7px rgba(0, 0, 0, 0.4);
+}
+
+.todoCard {
+  transition: all 0.2s !important;
+  -webkit-transition: all 0.2s !important;
+  -moz-transition: all 0.2s !important;
+  -ms-transition: all 0.2s !important;
+  -o-transition: all 0.2s !important;
+}
+
+.todoCard:hover {
+  padding: 20px 0 20px !important;
+  box-shadow: 0px 7px 7px rgba(0, 0, 0, 0.4) !important;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -36,3 +62,27 @@
     transform: rotate(360deg);
   }
 }
+
+/* ===Custom Fonts=== */
+@font-face {
+  font-family: alexandria;
+  src: url("../public/fonts/Alexandria-Regular.ttf");
+  font-weight: normal;
+}
+@font-face {
+  font-family: alexandria;
+  src: url("../public/fonts/Alexandria-Bold.ttf");
+  font-weight: bold;
+}
+@font-face {
+  font-family: alexandria;
+  src: url("../public/fonts/Alexandria-Black.ttf");
+  font-weight: 900;
+}
+@font-face {
+  font-family: alexandria;
+  src: url("../public/fonts/Alexandria-Light.ttf");
+  font-weight: 200;
+}
+
+/* ===Custom Fonts=== */
