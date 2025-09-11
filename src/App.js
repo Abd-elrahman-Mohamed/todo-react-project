@@ -1,11 +1,8 @@
 import "./App.css";
 import TodoList from "./components/TodoList";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { TodosContext } from "./contexts/TodosContext";
 import AlertProvider from "./contexts/ShowAlertContext";
-import { useState } from "react";
-
-const initialToDO = [];
+import { TodosProvider } from "./contexts/TodosContext";
 
 const theme = createTheme({
   typography: {
@@ -19,16 +16,14 @@ const theme = createTheme({
 });
 
 function App() {
-  const [todos, setTodos] = useState(initialToDO);
-
   return (
     <ThemeProvider theme={theme}>
       <div className="App" dir="rtl">
-        <TodosContext.Provider value={{ todos, setTodos }}>
-          <AlertProvider>
+        <AlertProvider>
+          <TodosProvider>
             <TodoList />
-          </AlertProvider>
-        </TodosContext.Provider>
+          </TodosProvider>
+        </AlertProvider>
       </div>
     </ThemeProvider>
   );

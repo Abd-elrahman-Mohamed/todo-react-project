@@ -1,5 +1,5 @@
 // react imports
-import { useState, useContext, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useReducer, useContext } from "react";
 // mui imports
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
@@ -17,17 +17,19 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 // id library
-import { v4 as uuidv4 } from "uuid";
+
 // components
 import Todo from "./Todo";
 // contexts
+import { useAlert } from "../contexts/ShowAlertContext";
 import { TodosContext } from "../contexts/TodosContext";
-import { ShowAlertContext } from "../contexts/ShowAlertContext";
 
 export default function TodoList() {
   // useContexts
-  const { todos, setTodos } = useContext(TodosContext);
-  const { showHideAlert } = useContext(ShowAlertContext);
+
+  const { todos, dispatch } = useContext(TodosContext);
+
+  const { showHideAlert } = useAlert();
   // states
   const [showDeleteModel, setShowDeleteModel] = useState(false);
   const [deleteSelectedTodo, setDeleteSelectedTodo] = useState(null);
@@ -41,7 +43,6 @@ export default function TodoList() {
   const [filter, setFilter] = useState("all");
 
   // variables
-  const storageTodos = JSON.parse(localStorage.getItem("todos") ?? "[]");
 
   // another Hooks
   const visibleTodos = useMemo(() => {
@@ -54,19 +55,14 @@ export default function TodoList() {
 
   // handlers
   const handleAddClick = () => {
-    const newTodo = {
-      id: uuidv4(),
-      title: taskInput,
-      description: "",
-      isCompleted: false,
-    };
-
-    const updatedTodos = [...todos, newTodo];
-
-    setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
-    showHideAlert("تم اضافه المهمة بنجاح");
+    dispatch({
+      type: "added",
+      payload: {
+        taskInput,
+      },
+    });
     setTaskInput("");
+    showHideAlert("تم اضافه المهمة بنجاح");
   };
 
   const handleOpenDeleteDialog = (todo) => {
@@ -78,10 +74,12 @@ export default function TodoList() {
   };
 
   const handleDeleteConfirm = () => {
-    const updatedTodos = todos.filter(
-      (todo) => todo.id !== deleteSelectedTodo.id
-    );
-    setTodos(updatedTodos);
+    dispatch({
+      type: "delete",
+      payload: {
+        deleteSelectedTodo,
+      },
+    });
     setShowDeleteModel(false);
     showHideAlert("تم حذف المهمة بنجاح");
   };
@@ -100,16 +98,14 @@ export default function TodoList() {
   };
 
   const handleSubmitEditClick = () => {
-    const newTasks = todos.map((todo) => {
-      if (todo.id === editSelectedTodo.id) {
-        todo.title = editInputs.titleInput;
-        todo.description = editInputs.descriptionInput;
-      }
-      showHideAlert("تم تعديل المهمة بنجاح");
-      return todo;
+    dispatch({
+      type: "edit",
+      payload: {
+        editSelectedTodo,
+        editInputs,
+      },
     });
-
-    setTodos(newTasks);
+    showHideAlert("تم تعديل المهمة بنجاح");
     setShowEditModal(false);
   };
 
@@ -122,8 +118,12 @@ export default function TodoList() {
   };
 
   useEffect(() => {
-    if (todos.includes(...storageTodos)) return;
-    setTodos(storageTodos);
+    /* 
+    const storageTodos = JSON.parse(localStorage.getItem("todos"));
+    setTodos()
+    */
+    // localStorage.setItem("todos", JSON.stringify(todos));
+    dispatch({ type: "get" });
   }, []);
 
   const todosJsx = visibleTodos.map((t) => (

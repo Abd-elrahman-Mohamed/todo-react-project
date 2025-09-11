@@ -6,19 +6,19 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
-import { useContext, useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { TodosContext } from "../contexts/TodosContext";
+import { useAlert } from "../contexts/ShowAlertContext";
+// import todosReducer from "../Reducers/todosReducer";
 
 export default function Todo({ task, showDelete, showEdit }) {
-  const { todos, setTodos } = useContext(TodosContext);
+  const { todos, dispatch } = useContext(TodosContext);
+  const { showHideAlert } = useAlert();
 
   // event handlers
   const handleCheckClick = () => {
-    const updatedTodos = todos.map((todo) => {
-      if (todo.id === task.id) todo.isCompleted = !todo.isCompleted;
-      return todo;
-    });
-    setTodos(updatedTodos);
+    dispatch({ type: "checkMark", payload: { task } });
+    showHideAlert("تم تعديل المهمة بنجاح");
   };
 
   const handleClickDeleteOpen = () => {
@@ -30,9 +30,7 @@ export default function Todo({ task, showDelete, showEdit }) {
   };
 
   useEffect(() => {
-    if (Array.isArray(todos)) {
-      localStorage.setItem("todos", JSON.stringify(todos));
-    }
+    localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
   return (

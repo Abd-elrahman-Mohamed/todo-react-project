@@ -1,7 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 import SlideAlert from "../components/SlideAlert";
 
-export const ShowAlertContext = createContext({});
+const ShowAlertContext = createContext({});
 
 export default function AlertProvider({ children }) {
   const [showAlert, setShowAlert] = useState(false);
@@ -17,10 +17,12 @@ export default function AlertProvider({ children }) {
 
   return (
     <>
-      <ShowAlertContext.Provider value={{showHideAlert}}>
+      <ShowAlertContext.Provider value={{ showHideAlert }}>
         <SlideAlert showAlert={showAlert} txt={alertMsg} type={"success"} />
         {children}
       </ShowAlertContext.Provider>
     </>
   );
 }
+
+export const useAlert = () => useContext(ShowAlertContext);
